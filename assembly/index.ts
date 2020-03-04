@@ -34,6 +34,35 @@ export function isDistanceSquaredEqual(x1: i32, y1: i32,  x2: i32, y2: i32, x3: 
   return d1 == d2;
 }
 
+function getDistanceSquared(x1: i16, y1: i16, x2: i16, y2: i16): i16 {
+  return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+};
+
+export function findSquares(len: i32): i32 {
+  let xs = new Array<i16>(len);
+  let ys = new Array<i16>(len);
+  for (let i:i32 = 0; i < len; i++) {
+    xs[i] = getI16At(i * 2);
+    ys[i] = getI16At(i * 2 + 1);
+  }
+  let pp = new Array<Array<i16>>(len * (len + 1) / 2);
+  let count = 0;
+        for (let i = 0; i < len; i++) {
+            // point pair p1,p2 is same as p2,p1 that is why we start from i, +1 so that we eliminate p1,p1 pair
+            for (let j = i + 1; j < len; j++) {
+                let tmp = new Array<i16>(5);
+                tmp[0] = xs[i];
+                tmp[1] = ys[i];
+                tmp[2] = xs[j];
+                tmp[3] = ys[j];
+                tmp[4] = getDistanceSquared(xs[i], ys[i], xs[j], ys[j]);
+                pp[count] = tmp;
+                count++;
+            }
+        }
+  return 1;
+}
+
 export function find(len: i32): i32 {
   let count = 0;
   for(let i = 0; i < len; i++) {

@@ -4,72 +4,25 @@
     </head>
     <body>
         <script>
-            ( async function() {
-            
-                const getAsmModule = function() {
-                    importObject = {
-                        env: {
-                            abort: () => console.log("Abort!")
-                        },
-                        console: {
-                            log: p  => console.log(p)
-                        },
-                        custom: {
-                            returnSquare: (...args) => console.log(args)
-                        }
-                    };
-                    return fetch('build/optimized.wasm')
-                    .then(r => r.arrayBuffer())
-                    .then(buffer => WebAssembly.instantiate(buffer, importObject));
+            let openFile = event => {
+                let input = event.target;
+                let reader = new FileReader();
+
+                reader.onload = () => {
+                    let text = reader.result;
+                    let points = reader.result.split('\n').map(point => point.split(' '));
+
+                    var myWorker = new Worker('worker.js');
+                    myWorker.onmessage = function(e) {
+                        console.log('Message received from worker', e.data);
+                    }
+                    myWorker.postMessage(points);
                 };
-                
-                const asmModule = await getAsmModule();
-                var exports = asmModule.instance.exports;
-                var findSquare = exports.find;
-                const memory = exports.memory;
-                const wasmByteMemoryArray = new Int16Array(memory.buffer);
-
-                // x even, y odd
-                wasmByteMemoryArray[0] = 1;
-                wasmByteMemoryArray[1] = 1;
-
-                wasmByteMemoryArray[2] = 1;
-                wasmByteMemoryArray[3] = -1;
-
-                wasmByteMemoryArray[4] = -1;
-                wasmByteMemoryArray[5] = 1;
-
-                wasmByteMemoryArray[6] = -1;
-                wasmByteMemoryArray[7] = -1;
-
-                wasmByteMemoryArray[8] = 3;
-                wasmByteMemoryArray[9] = 3;
-
-
-                wasmByteMemoryArray[10] = 1;
-                wasmByteMemoryArray[11] = 3;
-
-                wasmByteMemoryArray[12] = 3;
-                wasmByteMemoryArray[13] = 1;
-
-                let s = findSquare(7);
-                console.log('@@@ number of found squares: ', s);
-            })();
-
-            var openFile = function(event) {
-                var input = event.target;
-
-                var reader = new FileReader();
-                reader.onload = function(){
-                var text = reader.result;
-                var node = document.getElementById('output');
-                node.innerText = text;
-                console.log(reader.result.substring(0, 200));
-                };
-                    reader.readAsText(input.files[0]);
+                reader.readAsText(input.files[0]);
             };
         </script>
-
-            <input type='file' accept='text/plain' onchange='openFile(event)'>
+            <input type='file' accept='text/plain' onchange='openFile(event)'/>
+            <div id="output"></div>
+            <input type="checkbox"/>
     </body>
 </html>
