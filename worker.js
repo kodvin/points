@@ -1,3 +1,7 @@
+const reportFoundSquare = message => {
+    console.log(message);
+}
+
 let sfh = {
     // no need for expensive sqrt because every distance will be squared
     getDistanceSquared(x1, y1, x2, y2) {
