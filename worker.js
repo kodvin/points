@@ -164,35 +164,8 @@ function* findSquaresGenerator(points) {
     yield {'state': 'FINISHED', "content": "Found all squares in the possiible point space"};
 }
 
-const startFindingSquares = points => {
-    sfh.getSquaresNonBlocking(findSquaresGenerator(points));
-};
-
-const findSquares = async points => {  
-    const getAsmModule = function() {
-          importObject = {
-              env: {
-                  abort: () => console.log("Abort!")
-              },
-              console: {
-                  log: p  => console.log(p)
-              },
-              custom: {
-                  returnSquare: (...args) => postMessage(args)
-              }
-          };
-          return fetch('build/optimized.wasm')
-          .then(r => r.arrayBuffer())
-          .then(buffer => WebAssembly.instantiate(buffer, importObject));
-      };
-      
-    let asmModule = await getAsmModule();
-    var exports = asmModule.instance.exports;
-    var findSquare = exports.find;
-    const memory = exports.memory;
-    const wasmByteMemoryArray = new Int16Array(memory.buffer);
-
-    startFindingSquares(points);
+const findSquares = points => {  
+    sfh.getSquaresNonBlocking(findSquaresGenerator(points));(points);
 }
   
   
