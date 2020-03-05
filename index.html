@@ -10,7 +10,7 @@
 
                 reader.onload = () => {
                     let text = reader.result;
-                    let points = reader.result.split('\n').map(point => point.split(' '));
+                    let points = reader.result.split('\n').map(point => point.trim().split(' '));
 
                     var myWorker = new Worker('worker.js');
                     myWorker.onmessage = function(e) {
