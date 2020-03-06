@@ -1,6 +1,6 @@
 <html>
     <head>
-
+        <link rel="stylesheet" href="src/img/styles.css">
     </head>
     <body>
         <script>
@@ -12,7 +12,7 @@
                     let text = reader.result;
                     let points = reader.result.split('\n').map(point => point.trim().split(' '));
 
-                    var myWorker = new Worker('worker.js');
+                    var myWorker = new Worker('/src/point/worker.js');
                     myWorker.onmessage = function(e) {
                         console.log('Message received from worker', e.data);
                     }
@@ -20,40 +20,12 @@
                 };
                 reader.readAsText(input.files[0]);
             };
-
-            const kickOffAsm = async () => {
-                const getAsmModule = function() {
-                    importObject = {
-                        env: {
-                            abort: () => console.log("Abort!")
-                        },
-                        console: {
-                            log: p  => console.log(p)
-                        },
-                        custom: {
-                            returnSquare: (...args) => postMessage(args)
-                        }
-                    };
-                    return fetch('build/optimized.wasm')
-                    .then(r => r.arrayBuffer())
-                    .then(buffer => WebAssembly.instantiate(buffer, importObject));
-                };
-                
-                let asmModule = await getAsmModule();
-                var exports = asmModule.instance.exports;
-                var findSquare = exports.find;
-                const memory = exports.memory;
-                const wasmByteMemoryArray = new Int16Array(memory.buffer);
-
-                // TODO add stuff to do
-            }
-            kickOffAsm();
         </script>
-            <input type='file' accept='text/plain' onchange='openFile(event)'/>
-            <div id="output"></div>
-            <div>
-                <span>checkit out it does not block ui</span>
-                 <input type="checkbox"/>
-            </div>
+        <input type='file' accept='text/plain' onchange='openFile(event)'/>
+        <div id="output"></div>
+        <div>
+            <canvas id='canvas'></canvas>
+        </div>
+        <script type="module" src="src/img/main.js"></script>
     </body>
 </html>
