@@ -1,7 +1,6 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const w = 200;
-const h = 100;
+
 const getAsmModule = function() {
     const importObject = {
         env: {
@@ -20,14 +19,16 @@ const getAsmModule = function() {
 };
 
 const onImgLoad = (dim, wasmByteMemoryArray, img) => {
-    // execute drawImage statements herep
+    // execute drawImage statements here
+    const w = 200;
+    const h = 100; // canvas.offsetHeight;
     ctx.drawImage(img, 0, 0, w, h);
     const imgd = ctx.getImageData(0, 0, w, h);
 
     imgd.data.forEach((element, i) => {
         wasmByteMemoryArray[i] = element;
     });
-    let sign = -10;
+    let speed = -10;
     let alpha = 255;
     const draw = alpha => {
         dim(80000, alpha);
@@ -38,9 +39,9 @@ const onImgLoad = (dim, wasmByteMemoryArray, img) => {
         ctx.putImageData(new ImageData(cArray, w, h), 0, 0);
     };
     setInterval(() => {
-        alpha += sign;
+        alpha += speed;
         if (alpha < 0 || alpha > 254) {
-            sign *= -1;
+            speed *= -1;
         }
         draw(alpha);
     }, 100);

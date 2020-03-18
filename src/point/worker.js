@@ -1,5 +1,5 @@
 const reportFoundSquare = message => {
-    console.log(message);
+    postMessage(message);
 };
 
 let sfh = {
@@ -92,7 +92,7 @@ let sfh = {
                 reportFoundSquare(next.value);
                 this.getSquaresNonBlocking(generator);
             } else {
-                reportFoundSquare("Found all squares in the possible point space");
+                reportFoundSquare({ state: "DONE", content: "Exiting web worker" });
             }
         }, 0);
     }
@@ -181,7 +181,7 @@ function* findSquaresGenerator(points) {
         };
     }
     console.timeEnd("squaresearch");
-    yield { state: "FINISHED", content: "Found all squares in the possiible point space" };
+    yield { state: "FINISHED", content: "Found all squares in the possible point space" };
 }
 
 const findSquares = points => {
@@ -190,6 +190,5 @@ const findSquares = points => {
 };
 
 onmessage = function(e) {
-    console.log("Message received from main script");
     findSquares(e.data);
 };

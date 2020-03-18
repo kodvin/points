@@ -1,0 +1,9 @@
+.container {
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+}
+.container .left,
+.container .right {
+    flex: 1;
+}
