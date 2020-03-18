@@ -3,6 +3,7 @@
         <link rel="stylesheet" href="src/img/styles.css" />
         <link rel="stylesheet" href="src/app/styles.css" />
         <script type="module" src="src/img/main.js"></script>
+        <script type="module" src="src/img/convolute.js"></script>
         <script type="module" src="src/app/main.js"></script>
     </head>
     <body>
@@ -10,6 +11,9 @@
             <div class="left">
                 <input id="file-input" type="file" class="custom-file-input" onchange="openFile(event)" />
                 <div id="output"></div>
+            </div>
+            <div class="center" style="height: 300;">
+                <canvas id="canvas2" class="fill"></canvas>
             </div>
             <div class="right">
                 <!-- Blinking is done with AssemblyScript and it shows that webworker is not blocking the main thread -->
